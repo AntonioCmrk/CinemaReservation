@@ -1,4 +1,5 @@
-﻿using CinemaReservationAPI.Models;
+﻿using CinemaReservationAPI.Dto;
+using CinemaReservationAPI.Models;
 using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -41,15 +42,14 @@ namespace CinemaReservationAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<Seat>>>CreateSeat(Seat seat)
+        public async Task<ActionResult<IEnumerable<Seat>>>CreateSeat(SeatDto request)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             var parameters = new
             {
-                AuditoriumId = seat.AuditoriumId,
-                Row = seat.Row,
-                Number = seat.Number,
-                ReservationHolder = seat.ReservationHolder
+                AuditoriumId = request.AuditoriumId,
+                Row = request.Row,
+                Number = request.Number
             };
 
             await connection.ExecuteAsync(@"INSERT INTO seats (AuditoriumId, Row, Number, ReservationHolder) 
@@ -59,16 +59,15 @@ namespace CinemaReservationAPI.Controllers
         }
 
         [HttpPut("{seatId}")]
-        public async Task<ActionResult<IEnumerable<Seat>>> UpdateSeat(int seatId, Seat updatedSeat)
+        public async Task<ActionResult<IEnumerable<Seat>>> UpdateSeat(int seatId, SeatDto request)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             var parameters = new
             {
                 Id = seatId,
-                AuditoriumId = updatedSeat.AuditoriumId,
-                Row = updatedSeat.Row,
-                Number = updatedSeat.Number,
-                ReservationHolder = updatedSeat.ReservationHolder
+                AuditoriumId = request.AuditoriumId,
+                Row = request.Row,
+                Number = request.Number
             };
 
             await connection.ExecuteAsync(@"UPDATE seats SET 

@@ -3,6 +3,7 @@ using CinemaReservationAPI.Dto;
 using CinemaReservationAPI.Models;
 using Dapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,22 +25,21 @@ namespace CinemaReservationAPI.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly CinemaReservationDbContext _dbContext;
-        private readonly IUserService _userService;
 
-        public AuthController(IConfiguration configuration, IUserService userService, CinemaReservationDbContext dbContext)
+        public AuthController(IConfiguration configuration, CinemaReservationDbContext dbContext)
         {
             _configuration = configuration;
-            _userService = userService;
             _dbContext = dbContext;
         }
+
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
         {
-            using var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-            IEnumerable<User> users = await SelectAllUsers(connection);
+            using var dbContext = _dbContext;
+            IEnumerable<User> existingUsers = await _dbContext.Users.ToListAsync();
 
-            return Ok(users);
+            return Ok(/*users*/);
         }
 
         [HttpPost("register")]
@@ -63,19 +63,20 @@ namespace CinemaReservationAPI.Controllers
                 PasswordSalt = passwordSalt
             };
 
-            await connection.ExecuteAsync(@"INSERT INTO users (Username, Email, Role, PasswordHash, PasswordSalt, CinemaId, RefreshToken, TokenCreated, TokenExpires) 
-                                    VALUES (@Username, @Email, @Role, @PasswordHash, @PasswordSalt, @CinemaId, @RefreshToken, @TokenCreated, @TokenExpires)", newUser);
+            _dbContext.Users.Add(newUser);
+            await _dbContext.SaveChangesAsync();
+
 
             return Ok(newUser);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(string username, string password)
+        public async Task<ActionResult<string>> Login(UserLoginDto request)
         {
             using var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-            User user = await SelectUserByUsername(connection, username);
-            if (user != null && VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            User user = await SelectUserByUsername(connection, request.Username);
+            if (user != null && VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             {
                 string token = CreateToken(user);
                 var refreshToken = GeneratRefreshToken();

@@ -1,0 +1,33 @@
+.welcome-container {
+	text-align: center;
+	margin-top: 50px;
+}
+
+.title {
+	font-size: 48px;
+	font-weight: bold;
+	margin-bottom: 20px;
+	color: rgb(204, 22, 22);
+}
+
+.message {
+	font-size: 18px;
+	margin-bottom: 20px;
+}
+
+.button-container {
+	margin-top: 20px;
+}
+
+.button-container .btn-login {
+	background-color: rgb(204, 22, 22);
+	color: white;
+}
+
+.button-container .btn-login:hover {
+	background-color: darkred;
+}
+
+.button-container .btn-secondary {
+	margin-left: 10px;
+}

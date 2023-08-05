@@ -1,4 +1,5 @@
-﻿using CinemaReservationAPI.Models;
+﻿using CinemaReservationAPI.Dto;
+using CinemaReservationAPI.Models;
 using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -41,13 +42,13 @@ namespace CinemaReservationAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<Auditorium>>> CreateAuditorium(int cinemaId, string label)
+        public async Task<ActionResult<IEnumerable<Auditorium>>> CreateAuditorium(AuditoriumDto request)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             var parameters = new
             {
-                CinemaId = cinemaId,
-                Label = label
+                CinemaId = request.CinemaId,
+                Label = request.Label
             };
 
             await connection.ExecuteAsync(@"INSERT INTO auditoriums (CinemaId, Label) 
@@ -57,14 +58,14 @@ namespace CinemaReservationAPI.Controllers
         }
 
         [HttpPut("{auditoriumId}")]
-        public async Task<ActionResult<IEnumerable<Auditorium>>> UpdateAuditorium(int auditoriumId, int cinemaId, string label)
+        public async Task<ActionResult<IEnumerable<Auditorium>>> UpdateAuditorium(int auditoriumId, AuditoriumDto request)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             var parameters = new
             {
                 Id = auditoriumId,
-                CinemaId = cinemaId,
-                Label = label
+                CinemaId = request.CinemaId,
+                Label = request.Label
             };
 
             await connection.ExecuteAsync(@"UPDATE auditoriums SET 

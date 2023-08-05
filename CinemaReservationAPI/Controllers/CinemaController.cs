@@ -1,4 +1,5 @@
-﻿using CinemaReservationAPI.Models;
+﻿using CinemaReservationAPI.Dto;
+using CinemaReservationAPI.Models;
 using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -41,16 +42,16 @@ namespace CinemaReservationAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<Cinema>>> CreateCinema(string name, string address, string zipCode, string town)
+        public async Task<ActionResult<IEnumerable<Cinema>>> CreateCinema(CinemaDto request)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 
             var parameters = new
             {
-                Name = name,
-                Address = address,
-                ZipCode = zipCode,
-                Town = town
+                Name = request.Name,
+                Address = request.Address,
+                ZipCode = request.ZipCode,  
+                Town = request.Town
             };
 
             await connection.ExecuteAsync(@"INSERT INTO cinemas (Name, Address, ZipCode, Town) 
@@ -60,17 +61,17 @@ namespace CinemaReservationAPI.Controllers
         }
 
         [HttpPut("{cinemaId}")]
-        public async Task<ActionResult<IEnumerable<Cinema>>> UpdateCinema(int cinemaId, string name, string address, string zipCode, string town)
+        public async Task<ActionResult<IEnumerable<Cinema>>> UpdateCinema(int cinemaId, CinemaDto request)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 
             var parameters = new
             {
                 Id = cinemaId,
-                Name = name,
-                Address = address,
-                ZipCode = zipCode,
-                Town = town
+                Name = request.Name,
+                Address = request.Address,
+                ZipCode = request.ZipCode,
+                Town = request.Town
             };
 
             await connection.ExecuteAsync(@"UPDATE cinemas SET 

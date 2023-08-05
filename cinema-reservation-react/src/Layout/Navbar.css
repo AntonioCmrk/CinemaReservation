@@ -1,0 +1,18 @@
+.navbar-custom {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: rgb(204, 22, 22);
+}
+
+.navbar-text {
+	color: white;
+	font-size: 20px;
+	font-weight: bold;
+	text-decoration: none;
+	margin-right: auto;
+}
+
+.btn {
+	margin-left: auto;
+}
