@@ -15,12 +15,6 @@ export default function Welcome() {
 					Log in
 				</Link>
 				<Link
-					to="/Pages/CinemaUsers"
-					className="btn btn-login"
-				>
-					CinemaUsers
-				</Link>
-				<Link
 					to="/Users/Register"
 					className="btn btn-secondary"
 				>

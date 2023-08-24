@@ -5,7 +5,10 @@ import Login from "./Users/Login";
 import Register from "./Users/Register";
 import Navbar from "./Layout/Navbar";
 import Welcome from "./Pages/Welcome";
-import CinemaUsers from "./Pages/CinemaUsers";
+import CinemaUsers from "./Pages/Normal/CinemaUsers";
+import CinemaSuperadmin from "./Pages/Superadmin/CinemaSuperadmin";
+import CinemaDashboard from "./Pages/Admin/CinemaDashboard";
+import MovieList from "./Pages/Normal/MovieList";
 
 function App() {
 	return (
@@ -26,8 +29,20 @@ function App() {
 						element={<Register />}
 					/>
 					<Route
-						path="/Pages/CinemaUsers"
+						path="/Pages/Normal/CinemaUsers"
 						element={<CinemaUsers />}
+					/>
+					<Route
+						path="/Pages/Superadmin/CinemaSuperadmin"
+						element={<CinemaSuperadmin />}
+					/>
+					<Route
+						path="/Pages/Admin/CinemaDashboard"
+						element={<CinemaDashboard />}
+					/>
+					<Route
+						path="/Pages/Normal/MovieList"
+						element={<MovieList />}
 					/>
 				</Routes>
 			</Router>

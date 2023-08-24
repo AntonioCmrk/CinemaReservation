@@ -25,50 +25,50 @@ namespace CinemaReservationAPI.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly CinemaReservationDbContext _dbContext;
+        private readonly IUserService _userService;
 
-        public AuthController(IConfiguration configuration, CinemaReservationDbContext dbContext)
+        public AuthController(IConfiguration configuration, CinemaReservationDbContext dbContext, IUserService userService)
         {
             _configuration = configuration;
             _dbContext = dbContext;
+            _userService = userService;
         }
-
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
         {
-            using var dbContext = _dbContext;
-            IEnumerable<User> existingUsers = await _dbContext.Users.ToListAsync();
+            IEnumerable<User> existingUsers =  _userService.GetAllUsers();
 
-            return Ok(/*users*/);
+            return Ok(existingUsers);
         }
 
-        [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserDto request)
-        {
-            using var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-
-            IEnumerable<User> existingUsers = await SelectAllUsers(connection);
-            if (existingUsers.Any(u => u.Email.Equals(request.Email) || u.Username.Equals(request.Username)))
+            [HttpPost("register")]
+            public async Task<ActionResult<User>> Register(UserDto request)
             {
-                return BadRequest("User already exists.");
-            }
+                using var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            User newUser = new User
-            {
-                Username = request.Username,
-                Email = request.Email,
-                Role = "normal",
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt
-            };
+                IEnumerable<User> existingUsers = await SelectAllUsers(connection);
+                if (existingUsers.Any(u => u.Email.Equals(request.Email) || u.Username.Equals(request.Username)))
+                {
+                    return BadRequest("User already exists.");
+                }
+
+                CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                User newUser = new User
+                {
+                    Username = request.Username,
+                    Email = request.Email,
+                    Role = "normal",
+                    PasswordHash = passwordHash,
+                    PasswordSalt = passwordSalt
+                };
 
             _dbContext.Users.Add(newUser);
             await _dbContext.SaveChangesAsync();
 
 
             return Ok(newUser);
-        }
+            }
 
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(UserLoginDto request)
@@ -142,7 +142,8 @@ namespace CinemaReservationAPI.Controllers
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim("CinemaId", user.CinemaId.ToString())
             };
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
                 _configuration.GetSection("AppSettings:Token").Value));
@@ -191,6 +192,10 @@ namespace CinemaReservationAPI.Controllers
             string query = "SELECT * FROM Users WHERE RefreshToken = @RefreshToken";
             var parameters = new { RefreshToken = refreshToken };
             return await connection.QueryFirstOrDefaultAsync<User>(query, parameters);
+        }
+        public static class CustomClaimTypes
+        {
+            public const string CinemaId = "http://schemas.example.com/identity/claims/cinemaid";
         }
 
     }

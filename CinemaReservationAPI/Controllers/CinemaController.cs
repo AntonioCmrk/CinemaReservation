@@ -1,8 +1,11 @@
 ﻿using CinemaReservationAPI.Dto;
 using CinemaReservationAPI.Models;
 using Dapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace CinemaReservationAPI.Controllers
@@ -17,7 +20,7 @@ namespace CinemaReservationAPI.Controllers
         {
             _config = config;
         }
-
+        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cinema>>> GetAllCinemas()
         {

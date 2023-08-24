@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Movie Reservation</string>
+    <string name="app_name1">Movie</string>
+    <string name="app_name2">Reservation</string>
+    <string name="please_log_in_or_register">Please log in or register</string>
+    <string name="log_in">Log in</string>
+    <string name="register">Register</string>
+    <string name="sign_up_title">Sign Up</string>
+    <string name="log_in_title">Log in</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="email">Email</string>
+</resources>

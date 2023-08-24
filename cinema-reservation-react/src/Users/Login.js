@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 
 export default function Login({ setIsLoggedIn }) {
 	let navigate = useNavigate();
@@ -24,18 +25,22 @@ export default function Login({ setIsLoggedIn }) {
 				"https://localhost:7097/api/Auth/login",
 				user,
 			);
-			const loginResponse = response.data;
+			const token = response.data;
+			const decodedToken = jwtDecode(token);
+			const role =
+				decodedToken[
+					"http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+				];
+			const cinemaId = decodedToken.CinemaId;
 
-			if (loginResponse.status) {
-				const token = loginResponse.token;
-
-				setIsLoggedIn(true);
-				localStorage.setItem("userToken", token);
-
-				axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-				navigate("/Pages/CinemaUsers");
+			axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+			if (role === "superadmin") {
+				navigate("/Pages/Superadmin/CinemaSuperadmin");
+			} else if (role === "admin") {
+				localStorage.setItem("cinemaId", cinemaId);
+				navigate("/Pages/Admin/CinemaDashboard");
 			} else {
-				alert("Login failed. Please check your credentials and try again.");
+				navigate("/Pages/Normal/CinemaUsers");
 			}
 		} catch (error) {
 			if (error.response) {

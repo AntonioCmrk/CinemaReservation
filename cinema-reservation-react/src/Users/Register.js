@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function Register() {
+export default function Register({ setIsLoggedIn }) {
 	let navigate = useNavigate();
 
 	const [user, setUser] = useState({
@@ -15,6 +15,28 @@ export default function Register() {
 
 	const onInputChange = (e) => {
 		setUser({ ...user, [e.target.name]: e.target.value });
+	};
+
+	const loginUser = async (credentials) => {
+		try {
+			const response = await axios.post(
+				"https://localhost:7097/api/Auth/login",
+				credentials,
+			);
+			const loginResponse = response;
+
+			if (loginResponse.status) {
+				const token = loginResponse.data;
+				localStorage.setItem("userToken", token);
+
+				axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+				navigate("/Pages/CinemaUsers");
+			} else {
+				alert("Login failed after registration. Please log in manually.");
+			}
+		} catch (error) {
+			alert("Login failed after registration. Please log in manually.");
+		}
 	};
 
 	const onSubmit = async (e) => {
@@ -40,8 +62,7 @@ export default function Register() {
 			);
 			if (response.status === 200) {
 				alert("Registration successful!");
-				localStorage.setItem("userEmail", user.email);
-				navigate("/pages/Movies", { state: { userEmail: user.email } });
+				loginUser({ username, password });
 			}
 		} catch (error) {
 			if (error.response) {

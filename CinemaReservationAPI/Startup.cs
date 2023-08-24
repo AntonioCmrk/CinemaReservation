@@ -18,44 +18,13 @@ namespace CinemaReservationAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<CinemaReservationDbContext>(options =>
-                options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddCors(options =>
-            {
-
-                options.AddDefaultPolicy(builder =>
-                {
-                    builder.AllowAnyOrigin()
-                           .AllowAnyHeader()
-                           .AllowAnyMethod();
-                });
-            });
-
-            services.AddControllers();
+           
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-            }
-
-            app.UseRouting();
-
-            app.UseAuthentication();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            
         }
     }
 }
