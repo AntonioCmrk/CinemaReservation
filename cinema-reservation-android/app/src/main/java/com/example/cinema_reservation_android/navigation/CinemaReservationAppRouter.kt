@@ -4,7 +4,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 
 sealed class Screen {
-
     object SignUpScreen : Screen()
     object LogInScreen : Screen()
     object WelcomeScreen : Screen()
@@ -13,7 +12,7 @@ sealed class Screen {
 
 object CinemaReservationAppRouter {
 
-    var currentScreen: MutableState<Screen> = mutableStateOf(Screen.SignUpScreen)
+    var currentScreen: MutableState<Screen> = mutableStateOf(Screen.FirstScreen)
 
     fun navigateTo(destination : Screen){
         currentScreen.value = destination

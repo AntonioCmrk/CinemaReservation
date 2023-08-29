@@ -21,8 +21,10 @@ import com.example.cinema_reservation_android.components.ClickableLoginTextCompo
 import com.example.cinema_reservation_android.components.HeadingTextComponent
 import com.example.cinema_reservation_android.components.MyTextFieldComponent
 import com.example.cinema_reservation_android.components.PasswordTextFieldComponent
+import com.example.cinema_reservation_android.data.UIEvent
 import com.example.cinema_reservation_android.navigation.CinemaReservationAppRouter
 import com.example.cinema_reservation_android.navigation.Screen
+import com.example.cinema_reservation_android.navigation.SystemBackButtonHandler
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,20 +40,29 @@ fun LogInScreen(){
             Spacer(modifier = Modifier.height(80.dp))
             MyTextFieldComponent(
                 labelValue = stringResource(id = R.string.username),
-                painterResource(id = R.drawable.profile)
-            )
+                painterResource(id = R.drawable.profile),
+                onTextChanged = {
+
+                })
             PasswordTextFieldComponent(
                 labelValue = stringResource(id = R.string.password),
-                painterResource(id = R.drawable.ic_lock)
-            )
+                painterResource(id = R.drawable.ic_lock),
+                onTextSelected = {
+
+                })
             Spacer(modifier = Modifier.height(80.dp))
             ButtonComponent(
                 value = stringResource(id = R.string.log_in),
-                onButtonClicked = { /*TODO*/ })
+                onButtonClicked = {
+
+                })
             ClickableLoginTextComponent(tryingToLogin = false ,onTextSelected = {
                 CinemaReservationAppRouter.navigateTo(
                     Screen.SignUpScreen)})
         }
+    }
+    SystemBackButtonHandler {
+        CinemaReservationAppRouter.navigateTo(Screen.FirstScreen)
     }
 }
 
