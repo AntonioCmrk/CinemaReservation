@@ -8,6 +8,7 @@ sealed class Screen {
     object LogInScreen : Screen()
     object WelcomeScreen : Screen()
     object FirstScreen : Screen()
+    object MovieScreen : Screen()
 }
 
 object CinemaReservationAppRouter {

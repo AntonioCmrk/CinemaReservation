@@ -39,11 +39,11 @@ fun FirstScren(){
             SmallTextComponent(value = stringResource(id = R.string.please_log_in_or_register))
             ButtonComponent(
                 value = stringResource(id = R.string.log_in),
-                onButtonClicked = { CinemaReservationAppRouter.navigateTo(Screen.LogInScreen) })
+                onButtonClicked = { CinemaReservationAppRouter.navigateTo(Screen.LogInScreen) },isEnabled = true)
             Spacer(modifier = Modifier.height(28.dp))
             ButtonComponent(
                 value = stringResource(id = R.string.register),
-                onButtonClicked = { CinemaReservationAppRouter.navigateTo(Screen.SignUpScreen) })
+                onButtonClicked = { CinemaReservationAppRouter.navigateTo(Screen.SignUpScreen) },isEnabled = true)
         }
     }
 }

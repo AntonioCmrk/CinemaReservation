@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "673883301016",
+    "project_id": "moviereservation-fb893",
+    "storage_bucket": "moviereservation-fb893.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:673883301016:android:7f19209c85f5d67f275ced",
+        "android_client_info": {
+          "package_name": "com.example.cinema_reservation_android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "673883301016-kpoqp8jl08ti6q63qesbjlboaic03tfk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAehi1r3BnJ5s98XxYTx7McfWDOhj4RLwA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "673883301016-kpoqp8jl08ti6q63qesbjlboaic03tfk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

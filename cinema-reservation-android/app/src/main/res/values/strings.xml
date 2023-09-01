@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Movie Reservation</string>
+    <string name="app_name">MovieReservation</string>
     <string name="app_name1">Movie</string>
     <string name="app_name2">Reservation</string>
     <string name="please_log_in_or_register">Please log in or register</string>
@@ -11,5 +11,6 @@
     <string name="password">Password</string>
     <string name="hide_password">Hide password</string>
     <string name="show_password">Show password</string>
-    <string name="email">Email</string>
+    <string name="email">Email</string>"Logout"
+    <string name="log_out">Logout</string>
 </resources>

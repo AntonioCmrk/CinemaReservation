@@ -1,4 +1,4 @@
-package com.example.cinema_reservation_android.data
+package com.example.cinema_reservation_android.data.signup
 
 data class RegistrationUIState (
 

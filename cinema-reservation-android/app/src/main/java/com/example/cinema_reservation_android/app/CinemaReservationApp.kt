@@ -12,6 +12,7 @@ import com.example.cinema_reservation_android.navigation.CinemaReservationAppRou
 import com.example.cinema_reservation_android.navigation.Screen
 import com.example.cinema_reservation_android.screens.FirstScren
 import com.example.cinema_reservation_android.screens.LogInScreen
+import com.example.cinema_reservation_android.screens.MovieScreen
 import com.example.cinema_reservation_android.screens.SignUpScreen
 import com.example.cinema_reservation_android.screens.WelcomeScreen
 
@@ -38,6 +39,9 @@ fun CinemaReservationApp(){
 
                 is Screen.LogInScreen -> {
                     LogInScreen()
+                }
+                is Screen.MovieScreen -> {
+                    MovieScreen()
                 }
 
                 else -> { FirstScren()}

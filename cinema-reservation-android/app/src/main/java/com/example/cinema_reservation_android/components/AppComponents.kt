@@ -205,7 +205,7 @@ fun PasswordTextFieldComponent(
 }
 
 @Composable
-fun ButtonComponent(value: String, onButtonClicked: () -> Unit, isEnabled: Boolean = true) {
+fun ButtonComponent(value: String, onButtonClicked: () -> Unit, isEnabled: Boolean = false) {
     Button(
         modifier = Modifier
             .fillMaxWidth()

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -22,15 +23,15 @@ import com.example.cinema_reservation_android.components.ClickableLoginTextCompo
 import com.example.cinema_reservation_android.components.HeadingTextComponent
 import com.example.cinema_reservation_android.components.MyTextFieldComponent
 import com.example.cinema_reservation_android.components.PasswordTextFieldComponent
-import com.example.cinema_reservation_android.data.LoginViewModel
-import com.example.cinema_reservation_android.data.UIEvent
+import com.example.cinema_reservation_android.data.signup.SignupViewModel
+import com.example.cinema_reservation_android.data.signup.SignupUIEvent
 import com.example.cinema_reservation_android.navigation.CinemaReservationAppRouter
 import com.example.cinema_reservation_android.navigation.Screen
 import com.example.cinema_reservation_android.navigation.SystemBackButtonHandler
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(loginViewModel: LoginViewModel = viewModel()){
+fun SignUpScreen(signupViewModel: SignupViewModel = viewModel()){
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -44,35 +45,40 @@ fun SignUpScreen(loginViewModel: LoginViewModel = viewModel()){
                 labelValue = stringResource(id = R.string.username),
                 painterResource(id = R.drawable.profile),
                 onTextChanged = {
-                    loginViewModel.onEvent(UIEvent.UsernameChanged(it))
+                    signupViewModel.onEvent(SignupUIEvent.UsernameChanged(it))
                 },
-                loginViewModel.registrationUIState.value.usernameError
+                signupViewModel.registrationUIState.value.usernameError
             )
             MyTextFieldComponent(
                 labelValue = stringResource(id = R.string.email),
                 painterResource(id = R.drawable.message),
                 onTextChanged = {
-                    loginViewModel.onEvent(UIEvent.EmailChanged(it))
+                    signupViewModel.onEvent(SignupUIEvent.EmailChanged(it))
                 },
-                loginViewModel.registrationUIState.value.emailError
+                signupViewModel.registrationUIState.value.emailError
             )
             PasswordTextFieldComponent(
                 labelValue = stringResource(id = R.string.password),
                 painterResource(id = R.drawable.ic_lock),
                 onTextSelected = {
-                    loginViewModel.onEvent(UIEvent.PasswordChanged(it))
+                    signupViewModel.onEvent(SignupUIEvent.PasswordChanged(it))
                 },
-                loginViewModel.registrationUIState.value.passwordError
+                signupViewModel.registrationUIState.value.passwordError
             )
             Spacer(modifier = Modifier.height(80.dp))
             ButtonComponent(
                 value = stringResource(id = R.string.register),
                 onButtonClicked = {
-                    loginViewModel.onEvent(UIEvent.RegisterButtonClicked)
-                })
+                    signupViewModel.onEvent(SignupUIEvent.RegisterButtonClicked)
+                },
+                isEnabled = signupViewModel.allValidationsPassed.value)
+
             ClickableLoginTextComponent(onTextSelected = {
                 CinemaReservationAppRouter.navigateTo(
                     Screen.LogInScreen)})
+        }
+        if(signupViewModel.signUpInProgress.value) {
+            CircularProgressIndicator()
         }
     }
     SystemBackButtonHandler {
