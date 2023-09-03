@@ -7,7 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cinema_reservation_android.R
+import com.example.cinema_reservation_android.data.movies.MoviesViewModel
 import com.example.cinema_reservation_android.navigation.CinemaReservationAppRouter
 import com.example.cinema_reservation_android.navigation.Screen
 import com.example.cinema_reservation_android.screens.FirstScren
@@ -17,11 +19,17 @@ import com.example.cinema_reservation_android.screens.SignUpScreen
 import com.example.cinema_reservation_android.screens.WelcomeScreen
 
 @Composable
-fun CinemaReservationApp(){
+fun CinemaReservationApp(moviesViewModel: MoviesViewModel = viewModel()){
+
+    moviesViewModel.checkForActiveSession()
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = colorResource(id = R.color.primary)
     ){
+        if (moviesViewModel.isUserLoggedIn.value == true) {
+            CinemaReservationAppRouter.navigateTo(Screen.MovieScreen)
+        }
         Crossfade(targetState = CinemaReservationAppRouter.currentScreen) { currentState ->
             when (currentState.value) {
 

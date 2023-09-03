@@ -108,19 +108,7 @@ class SignupViewModel : ViewModel() {
             }
     }
 
-    fun logout(){
-        val firebaseAuth = FirebaseAuth.getInstance()
-        firebaseAuth.signOut()
-        val authStateListener = AuthStateListener{
-            if(it.currentUser == null){
-                Log.d(TAG, "Inside sign outsuccess")
-                CinemaReservationAppRouter.navigateTo(Screen.LogInScreen)
-            }else{
-                Log.d(TAG, "Inside sign out in not complete")
-            }
-        }
-        firebaseAuth.addAuthStateListener(authStateListener)
-    }
+
 
 
 }
