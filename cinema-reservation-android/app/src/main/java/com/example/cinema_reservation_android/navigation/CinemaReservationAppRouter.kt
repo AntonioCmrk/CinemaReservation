@@ -2,11 +2,12 @@ package com.example.cinema_reservation_android.navigation
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import com.example.cinema_reservation_android.models.Movie
 
 sealed class Screen {
     object SignUpScreen : Screen()
     object LogInScreen : Screen()
-    object WelcomeScreen : Screen()
+    object MovieDetailScreen : Screen()
     object FirstScreen : Screen()
     object MovieScreen : Screen()
 }

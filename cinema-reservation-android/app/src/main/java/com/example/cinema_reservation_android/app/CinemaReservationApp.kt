@@ -10,13 +10,14 @@ import androidx.compose.ui.res.colorResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cinema_reservation_android.R
 import com.example.cinema_reservation_android.data.movies.MoviesViewModel
+import com.example.cinema_reservation_android.models.Movie
 import com.example.cinema_reservation_android.navigation.CinemaReservationAppRouter
 import com.example.cinema_reservation_android.navigation.Screen
 import com.example.cinema_reservation_android.screens.FirstScren
 import com.example.cinema_reservation_android.screens.LogInScreen
+import com.example.cinema_reservation_android.screens.MovieDetailScreen
 import com.example.cinema_reservation_android.screens.MovieScreen
 import com.example.cinema_reservation_android.screens.SignUpScreen
-import com.example.cinema_reservation_android.screens.WelcomeScreen
 
 @Composable
 fun CinemaReservationApp(moviesViewModel: MoviesViewModel = viewModel()){
@@ -37,8 +38,8 @@ fun CinemaReservationApp(moviesViewModel: MoviesViewModel = viewModel()){
                     FirstScren()
                 }
 
-                is Screen.WelcomeScreen -> {
-                    WelcomeScreen()
+                is Screen.MovieDetailScreen -> {
+                    MovieDetailScreen()
                 }
 
                 is Screen.SignUpScreen -> {

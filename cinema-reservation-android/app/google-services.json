@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "673883301016",
+    "firebase_url": "https://moviereservation-fb893-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "moviereservation-fb893",
     "storage_bucket": "moviereservation-fb893.appspot.com"
   },
