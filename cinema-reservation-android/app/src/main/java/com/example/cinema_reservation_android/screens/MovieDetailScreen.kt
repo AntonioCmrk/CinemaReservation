@@ -30,7 +30,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.example.cinema_reservation_android.R
 import com.example.cinema_reservation_android.components.ButtonComponent
+import com.example.cinema_reservation_android.components.CustomCheckbox
 import com.example.cinema_reservation_android.components.HeadingTextComponent
+import com.example.cinema_reservation_android.components.TextComponent
 import com.example.cinema_reservation_android.data.movies.MoviesViewModel
 import com.example.cinema_reservation_android.models.Movie
 import com.example.cinema_reservation_android.navigation.CinemaReservationAppRouter
@@ -82,14 +84,7 @@ fun MovieDetailScreen(moviesViewModel: MoviesViewModel = viewModel()) {
                 .fillMaxSize()
                 .background(colorResource(id = R.color.white))
         ) {
-            Text(
-                text = movie.name ?: "",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                style = MaterialTheme.typography.headlineLarge,
-                textAlign = TextAlign.Center,
-            )
+            TextComponent(movie.name?: "")
             movie.image?.let { url ->
                 val painter = rememberImagePainter(
                     data = url,
@@ -119,7 +114,7 @@ fun MovieDetailScreen(moviesViewModel: MoviesViewModel = viewModel()) {
                     ) {
                         repeat(3) { columnIndex ->
                             val checkboxIndex = rowIndex * 3 + columnIndex
-                            Checkbox(
+                            CustomCheckbox(
                                 checked = checkboxStateList[checkboxIndex],
                                 enabled = checkboxEnabledList[checkboxIndex],
                                 onCheckedChange = { isChecked ->

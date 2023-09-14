@@ -1,28 +1,37 @@
 package com.example.cinema_reservation_android.components
 
+import android.graphics.Bitmap
+import android.graphics.BlendMode
+import android.graphics.LinearGradient
+import android.graphics.Shader
 import android.util.Log
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Chair
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.Chair
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -41,9 +50,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
@@ -52,6 +70,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -101,19 +120,51 @@ fun SmallTextComponent(value: String) {
 
 @Composable
 fun HeadingTextComponent(value: String) {
+    val GradientColors = listOf(
+        colorResource(id = R.color.purple),
+        colorResource(id = R.color.primary))
     Text(
         text = value,
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(),
         style = TextStyle(
-            fontSize = 36.sp,
-            fontWeight = FontWeight.Normal,
-            fontStyle = FontStyle.Normal
-        ), color = colorResource(id = R.color.black),
+            brush = Brush.linearGradient(
+                colors = GradientColors
+            ),
+            fontSize = 46.sp,
+            fontWeight = FontWeight.W900,
+            fontStyle = FontStyle.Italic,
+            fontFamily = FontFamily.Cursive
+        ),
+        color = colorResource(id = R.color.black),
         textAlign = TextAlign.Center
     )
 }
+
+@Composable
+fun TextComponent(value: String) {
+    val GradientColors = listOf(
+        colorResource(id = R.color.purple),
+        colorResource(id = R.color.primary))
+    Text(
+        text = value,
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(),
+        style = TextStyle(
+            brush = Brush.linearGradient(
+                colors = GradientColors
+            ),
+            fontSize = 46.sp,
+            fontWeight = FontWeight.W800,
+            fontStyle = FontStyle.Italic
+        ),
+        color = colorResource(id = R.color.black),
+        textAlign = TextAlign.Center
+    )
+}
+
 
 @ExperimentalMaterial3Api
 @Composable
@@ -336,40 +387,39 @@ fun MovieCard(
         shape = MaterialTheme.shapes.small,
         modifier = Modifier
             .padding(
-                bottom = 36.dp,  // Increase the bottom padding to add more spacing
-                start = 36.dp,   // Add start padding for spacing from the edges
-                end = 36.dp     // Add end padding for spacing from the edges
+                bottom = 36.dp,
+                start = 36.dp,
+                end = 36.dp
             )
             .fillMaxWidth()
             .clickable(onClick = onClick),
     ) {
+        movie.image?.let { url ->
+            val painter = rememberImagePainter(
+                data = url,
+                builder = {
+                    placeholder(R.drawable.empty)
+                    error(R.drawable.empty)
+                }
+            )
+            Image(
+                painter = painter,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(height = 225.dp),
+                contentScale = ContentScale.Crop,
+            )
+
+        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // Display the movie image if available
-            movie.image?.let { url ->
-                val painter = rememberImagePainter(
-                    data = url,
-                    builder = {
-                        placeholder(R.drawable.empty)
-                        error(R.drawable.empty)
-                    }
-                )
-                Image(
-                    painter = painter,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(225.dp),
-                    contentScale = ContentScale.Fit,
-                )
 
-            }
 
-            // Display the movie title
             Text(
                 text = movie.name ?: "",
                 modifier = Modifier
@@ -392,4 +442,22 @@ fun MovieCard(
             )
         }
     }
+}
+@Composable
+fun CustomCheckbox(checked: Boolean, enabled: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    val icon: ImageVector = if (checked) Icons.Default.Chair else Icons.Outlined.Chair
+    val tint: Color = if (checked) Color.Red else Color.Gray
+    val alpha: Float = if (enabled) 1f else 0.2f
+
+    Icon(
+        imageVector = icon,
+        contentDescription = "Custom Checkbox",
+        tint = tint,
+        modifier = Modifier
+            .clickable(enabled = enabled) {
+                if (enabled) onCheckedChange(!checked)
+            }
+            .size(50.dp)
+            .alpha(alpha)
+    )
 }
