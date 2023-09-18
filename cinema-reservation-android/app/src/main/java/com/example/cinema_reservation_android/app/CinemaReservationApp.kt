@@ -26,7 +26,8 @@ fun CinemaReservationApp(moviesViewModel: MoviesViewModel = viewModel()){
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = colorResource(id = R.color.primary)
+        color = colorResource(id = R.color.white
+        )
     ){
         if (moviesViewModel.isUserLoggedIn.value == true) {
             CinemaReservationAppRouter.navigateTo(Screen.MovieScreen)

@@ -1,6 +1,8 @@
 package com.example.cinema_reservation_android.data.signup
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.cinema_reservation_android.data.rules.Validator
@@ -18,6 +20,9 @@ class SignupViewModel : ViewModel() {
     var allValidationsPassed = mutableStateOf(false)
 
     var signUpInProgress = mutableStateOf(false)
+
+    lateinit var context: Context
+
     fun onEvent(event: SignupUIEvent) {
         when (event) {
             is SignupUIEvent.UsernameChanged -> {
@@ -84,7 +89,9 @@ class SignupViewModel : ViewModel() {
         Log.d(TAG, "inside_printState")
         Log.d(TAG, registrationUIState.toString())
     }
-
+    public fun GetContext(c: Context) {
+        context = c
+    }
     private fun createUserInFirebase(email: String, password: String) {
 
         signUpInProgress.value = true
@@ -99,6 +106,9 @@ class SignupViewModel : ViewModel() {
                 signUpInProgress.value = false
                 if (it.isSuccessful) {
                     CinemaReservationAppRouter.navigateTo(Screen.MovieScreen)
+                }
+                else{
+                    Toast.makeText(context, "Invalid email", Toast.LENGTH_LONG).show()
                 }
             }
             .addOnFailureListener {

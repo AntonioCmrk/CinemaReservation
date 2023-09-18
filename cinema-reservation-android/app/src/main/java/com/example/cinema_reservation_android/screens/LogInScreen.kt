@@ -1,5 +1,8 @@
 package com.example.cinema_reservation_android.screens
 
+import android.nfc.Tag
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,13 +13,19 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.cinema_reservation_android.R
 import com.example.cinema_reservation_android.components.ButtonComponent
 import com.example.cinema_reservation_android.components.ClickableLoginTextComponent
@@ -32,6 +41,10 @@ import com.example.cinema_reservation_android.navigation.SystemBackButtonHandler
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogInScreen(loginViewModel: LoginViewModel = viewModel()){
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
+    if(loginViewModel.loginInProgress.value) {
+        LottieAnimation(composition = composition)
+    }else{
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -56,10 +69,12 @@ fun LogInScreen(loginViewModel: LoginViewModel = viewModel()){
                     loginViewModel.onEvent(LoginUIEvent.PasswordChanged(it))
                 },
                 loginViewModel.loginUIState.value.passwordError)
-            Spacer(modifier = Modifier.height(80.dp))
+            Spacer(modifier = Modifier.height(145.dp))
+            val context = LocalContext.current
             ButtonComponent(
                 value = stringResource(id = R.string.log_in),
                 onButtonClicked = {
+                    loginViewModel.GetContext(context)
                     loginViewModel.onEvent(LoginUIEvent.LoginButtonClicked)
                 },
                 isEnabled = loginViewModel.allValidationsPassed.value)
@@ -67,8 +82,7 @@ fun LogInScreen(loginViewModel: LoginViewModel = viewModel()){
                 CinemaReservationAppRouter.navigateTo(
                     Screen.SignUpScreen)})
         }
-        if(loginViewModel.loginInProgress.value) {
-            CircularProgressIndicator()
+
         }
     }
     SystemBackButtonHandler {

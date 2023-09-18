@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.cinema_reservation_android.app.CinemaReservationApp
+import com.example.cinema_reservation_android.components.Home
 import com.example.cinema_reservation_android.ui.theme.CinemareservationandroidTheme
 
 class MainActivity : ComponentActivity() {

@@ -1,10 +1,16 @@
 package com.example.cinema_reservation_android.components
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BlendMode
 import android.graphics.LinearGradient
 import android.graphics.Shader
+import android.graphics.drawable.Animatable
 import android.util.Log
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,6 +27,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
@@ -40,12 +47,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -53,8 +64,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.graphicsLayer
@@ -63,6 +74,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -81,10 +93,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.preferences.core.stringPreferencesKey
 import coil.compose.rememberImagePainter
 import com.example.cinema_reservation_android.R
+import com.example.cinema_reservation_android.datastore
 import com.example.cinema_reservation_android.models.Movie
 import com.example.cinema_reservation_android.ui.theme.componentShapes
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import androidx.compose.animation.core.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun NormalTextComponent(value: String) {
@@ -460,4 +481,35 @@ fun CustomCheckbox(checked: Boolean, enabled: Boolean, onCheckedChange: (Boolean
             .size(50.dp)
             .alpha(alpha)
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Home() {
+
+    val context = LocalContext.current
+    val gckTokenKey = stringPreferencesKey("gcm_token")
+
+    val fcmToken = flow<String> {
+
+        context.datastore.data.map {
+            it[gckTokenKey]
+        }.collect(collector = {
+            if (it != null) {
+                Log.d("FCM", it)
+                this.emit(it)
+            }
+        })
+
+    }.collectAsState(initial = "")
+
+
+    Scaffold(topBar = { SmallTopAppBar(title = { Text(text = "Push Notification.") }) }) {
+        Column(modifier = Modifier.padding(it)) {
+
+            Text(text = "FCM Token")
+            Text(text = fcmToken.value)
+            Log.d("FCM","||||||||||||||||${fcmToken.value}")
+        }
+    }
 }

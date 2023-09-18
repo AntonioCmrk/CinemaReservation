@@ -1,8 +1,12 @@
 package com.example.cinema_reservation_android.data.login
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
+import com.example.cinema_reservation_android.MainActivity
 import com.example.cinema_reservation_android.data.rules.Validator
 import com.example.cinema_reservation_android.navigation.CinemaReservationAppRouter
 import com.example.cinema_reservation_android.navigation.Screen
@@ -16,6 +20,8 @@ class LoginViewModel: ViewModel(){
     var allValidationsPassed = mutableStateOf(false)
 
     var loginInProgress = mutableStateOf(false)
+
+    lateinit var context: Context
 
     fun onEvent(event: LoginUIEvent) {
         when (event) {
@@ -57,8 +63,10 @@ class LoginViewModel: ViewModel(){
 
     }
 
+    public fun GetContext(c: Context) {
+         context = c
+    }
     private fun login() {
-
         loginInProgress.value = true
         val email = loginUIState.value.email
         val password = loginUIState.value.password
@@ -73,6 +81,9 @@ class LoginViewModel: ViewModel(){
                 if(it.isSuccessful){
                     loginInProgress.value = false
                     CinemaReservationAppRouter.navigateTo(Screen.MovieScreen)
+                }else
+                {
+                    Toast.makeText(context, "Invalid credentials", Toast.LENGTH_LONG).show()
                 }
             }
             .addOnFailureListener {

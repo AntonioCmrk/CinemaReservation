@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,9 +17,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.cinema_reservation_android.R
 import com.example.cinema_reservation_android.components.AppToolbar
 import com.example.cinema_reservation_android.components.MovieCard
+import com.example.cinema_reservation_android.components.TextComponent
 import com.example.cinema_reservation_android.data.movies.MoviesViewModel
 import com.example.cinema_reservation_android.models.Movie
 import com.example.cinema_reservation_android.navigation.CinemaReservationAppRouter
@@ -28,6 +33,7 @@ import com.example.cinema_reservation_android.sealed.DataState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieScreen(moviesViewModel: MoviesViewModel = viewModel()) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
     val moviesState = remember { moviesViewModel.response }
     val TAG = MoviesViewModel::class.simpleName
 
@@ -44,7 +50,7 @@ fun MovieScreen(moviesViewModel: MoviesViewModel = viewModel()) {
         Scaffold(
             topBar = {
                 AppToolbar(
-                    toolbarTitle = stringResource(id = R.string.app_name),
+                    toolbarTitle = stringResource(id = R.string.projections),
                     logoutButtonClicked = {
                         moviesViewModel.logout()
                     }
@@ -55,14 +61,11 @@ fun MovieScreen(moviesViewModel: MoviesViewModel = viewModel()) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
+
             ) {
                 when (val dataState = moviesState.value) {
                     is DataState.Loading -> {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp)
-                        )
+                        LottieAnimation(composition = composition)
                     }
                     is DataState.Success -> {
                         val movies = dataState.data as List<Movie>
@@ -88,8 +91,6 @@ fun MovieScreen(moviesViewModel: MoviesViewModel = viewModel()) {
 
                     }
                     is DataState.Failure -> {
-                        // Handle the failure state here, you can display an error message
-                        // or take other appropriate actions.
                         Log.e(TAG, "Failed to fetch movies: ${dataState.message}")
                         Text(
                             text = "Failed to fetch movies",

@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.cinema_reservation_android"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -72,6 +72,10 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    implementation("com.google.firebase:firebase-messaging-ktx:23.2.1")
+
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
+
     // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:32.2.3"))
 
@@ -85,6 +89,9 @@ dependencies {
     implementation ("io.coil-kt:coil-compose:1.4.0")
 
     implementation ("androidx.compose.foundation:foundation:1.5.0")
+
+    //Lottie
+    implementation ("com.airbnb.android:lottie-compose:6.1.0")
 
 
 }
